@@ -89,7 +89,7 @@ function DragableTodo() {
           </nav>
         </div>
       </div>
-      <div className="container-fluid" style={{ height: "90vh" }}>
+      <div className="container-fluid mt-5" style={{ height: "90vh" }}>
         <div className="task-list row">
           <div
             className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
