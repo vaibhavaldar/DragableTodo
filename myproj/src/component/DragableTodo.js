@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import '../App.css';
 
 function DragableTodo() {
-  const [tasks, setTasks] = useState({
+  const initialTask = {
     todo: [],
     doing: [],
     done: [],
     custom: [],
-  });
-
+  }
+  const [tasks, setTasks] = useState(initialTask);
 
   const handleAddTask = (listKey, taskContent) => {
     if (taskContent.trim() === '') return;
@@ -49,6 +49,11 @@ function DragableTodo() {
     event.preventDefault();
   };
 
+
+  const handleCreateNewBoard = () => {
+    setTasks(initialTask);
+  };
+
   return (
     <div className="bg-dark">
       <div className="container-fluid">
@@ -75,7 +80,7 @@ function DragableTodo() {
               <div className="collapse navbar-collapse justify-content-lg-end " id="navbarSupportedContent">
                 <i className="fa-solid fa-bell text-white rounded-pill p-2 bg-dark bg-gradient"></i>
                 <form className="d-flex ps-3" role="search">
-                  <button className="btn btn-primary rounded-pill" type="button">
+                  <button onClick={handleCreateNewBoard} className="btn btn-primary rounded-pill" type="button">
                     Create New Board
                   </button>
                 </form>
@@ -83,148 +88,148 @@ function DragableTodo() {
             </div>
           </nav>
         </div>
+      </div>
+      <div className="container-fluid" style={{ height: "90vh" }}>
+        <div className="task-list row">
+          <div
+            className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
+            onDrop={(event) => handleDrop(event, 'todo')}
+            onDragOver={handleDragOver}
+          >
+            <div className="card-body">
+              <h5 className="card-title text-info bg-gradient p-3 bg_Todo_Doing_done">To Do <i class="fa-solid fa-ellipsis-vertical text-white offset-10"></i></h5>
 
-        <div className="container-fluid mt-5 " style={{ height: "90vh" }}>
-          <div className="task-list row">
-            <div
-              className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
-              onDrop={(event) => handleDrop(event, 'todo')}
-              onDragOver={handleDragOver}
-            >
-              <div className="card-body">
-                <h5 className="card-title text-info bg-gradient p-3 bg_Todo_Doing_done">To Do <i class="fa-solid fa-ellipsis-vertical text-white offset-10"></i></h5>
+              <div className="card-container ">
+                {tasks.todo.map((task) => (
+                  <div
+                    key={task.id}
+                    className="card mt-2 bg_cards text-white"
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, task.id, 'todo')}
 
-                <div className="card-container ">
-                  {tasks.todo.map((task) => (
-                    <div
-                      key={task.id}
-                      className="card mt-2 bg_cards text-white"
-                      draggable
-                      onDragStart={(event) => handleDragStart(event, task.id, 'todo')}
-
-                    >
-                      {/* <div className="card-body">
-                        {task.content}
-                        <button
-                          className="btn text-white  btn-sm float-end"
-                          onClick={() => handleDeleteTask('todo', task.id)}
-                        >
-                          X
-                        </button>
-                      </div> */}
-                      <div className="card-body">{task.content}</div>
+                  >
+                    <div className="card-body">
+                      {task.content}
+                      <button
+                        className="btn text-white bg-warning btn-sm float-end"
+                        onClick={() => handleDeleteTask('todo', task.id)}
+                      >
+                        X
+                      </button>
                     </div>
-                  ))}
-                </div>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    const taskContent = event.target.task.value;
-                    handleAddTask('todo', taskContent);
-                    event.target.task.value = '';
-                  }}
-                >
-                  <input type="text" name="task" placeholder="Add a new task" className='w-100 mt-2 p-1' />
-                  <button type="submit" className="btn offset-4 btn_Addtask text-white mt-1">
-                    + Add another task
-                  </button>
-                </form>
+                    {/* <div className="card-body">{task.content}</div> */}
+                  </div>
+                ))}
               </div>
-
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const taskContent = event.target.task.value;
+                  handleAddTask('todo', taskContent);
+                  event.target.task.value = '';
+                }}
+              >
+                <input type="text" name="task" placeholder="Add a new task" className='w-100 mt-2 p-1' />
+                <button type="submit" className="btn offset-4 btn_Addtask text-white mt-1">
+                  + Add another task
+                </button>
+              </form>
             </div>
 
-            <div
-              className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
-              onDrop={(event) => handleDrop(event, 'doing')}
-              onDragOver={handleDragOver}
-            >
-              <div className="card-body ">
-                <h5 className="card-title text-info bg-gradient p-3 bg_Todo_Doing_done">Doing <i class="fa-solid fa-ellipsis-vertical text-white offset-10"></i></h5>
-                <div className="card-container">
-                  {tasks.doing.map((task) => (
-                    <div
-                      key={task.id}
-                      className="card mt-2 bg_cards text-white"
-                      draggable
-                      onDragStart={(event) => handleDragStart(event, task.id, 'doing')}
-                    >
-                      <div className="card-body">{task.content}</div>
-                      {/* <div className="card-body">
-                        {task.content}
-                        <button
-                          className="btn text-white  btn-sm float-end"
-                          onClick={() => handleDeleteTask('doing', task.id)}
-                        >
-                          X
-                        </button>
-                      </div> */}
-                    </div>
-                  ))}
-                </div>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    const taskContent = event.target.task.value;
-                    handleAddTask('doing', taskContent);
-                    event.target.task.value = '';
-                  }}
-                >
-                  <input type="text" name="task" placeholder="Add a new task" className='w-100 mt-2 p-1' />
-                  <button type="submit" className="btn offset-4 btn_Addtask text-white mt-1">
-                    + Add another task
-                  </button>
-                </form>
-              </div>
+          </div>
 
+          <div
+            className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
+            onDrop={(event) => handleDrop(event, 'doing')}
+            onDragOver={handleDragOver}
+          >
+            <div className="card-body ">
+              <h5 className="card-title text-info bg-gradient p-3 bg_Todo_Doing_done">Doing <i class="fa-solid fa-ellipsis-vertical text-white offset-10"></i></h5>
+              <div className="card-container">
+                {tasks.doing.map((task) => (
+                  <div
+                    key={task.id}
+                    className="card mt-2 bg_cards text-white"
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, task.id, 'doing')}
+                  >
+                    {/* <div className="card-body">{task.content}</div> */}
+                    <div className="card-body">
+                      {task.content}
+                      <button
+                        className="btn text-white bg-warning btn-sm float-end"
+                        onClick={() => handleDeleteTask('doing', task.id)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const taskContent = event.target.task.value;
+                  handleAddTask('doing', taskContent);
+                  event.target.task.value = '';
+                }}
+              >
+                <input type="text" name="task" placeholder="Add a new task" className='w-100 mt-2 p-1' />
+                <button type="submit" className="btn offset-4 btn_Addtask text-white mt-1">
+                  + Add another task
+                </button>
+              </form>
             </div>
 
-            <div
-              className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
-              onDrop={(event) => handleDrop(event, 'done')}
-              onDragOver={handleDragOver}
-            >
-              <div className="card-body ">
-                <h5 className="card-title text-info bg-gradient p-3 bg_Todo_Doing_done">Done <i class="fa-solid fa-ellipsis-vertical text-white offset-10"></i></h5>
-                <div className="card-container">
-                  {tasks.done.map((task) => (
-                    <div
-                      key={task.id}
-                      className="card mt-2 bg_cards text-white"
-                      draggable
-                      onDragStart={(event) => handleDragStart(event, task.id, 'done')}
-                    >
-                      <div className="card-body">{task.content}</div>
-                      {/* <div className="card-body">
-                        {task.content}
-                        <button
-                          className="btn text-white btn-sm float-end"
-                          onClick={() => handleDeleteTask('done', task.id)}
-                        >
-                          X
-                        </button>
-                      </div> */}
-                    </div>
-                  ))}
-                </div>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    const taskContent = event.target.task.value;
-                    handleAddTask('done', taskContent);
-                    event.target.task.value = '';
-                  }}
-                >
-                  <input type="text" name="task" placeholder="Add a new task" className='w-100 mt-2 p-1' />
-                  <button type="submit" className="btn offset-4  btn_Addtask text-white mt-1">
-                    + Add another task
-                  </button>
-                </form>
-              </div>
+          </div>
 
+          <div
+            className="card task-column col-lg-4 col-sm-12 bg-dark border border-0 "
+            onDrop={(event) => handleDrop(event, 'done')}
+            onDragOver={handleDragOver}
+          >
+            <div className="card-body ">
+              <h5 className="card-title text-info bg-gradient p-3 bg_Todo_Doing_done">Done <i class="fa-solid fa-ellipsis-vertical text-white offset-10"></i></h5>
+              <div className="card-container">
+                {tasks.done.map((task) => (
+                  <div
+                    key={task.id}
+                    className="card mt-2 bg_cards text-white"
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, task.id, 'done')}
+                  >
+                    {/* <div className="card-body">{task.content}</div> */}
+                    <div className="card-body">
+                      {task.content}
+                      <button
+                        className="btn text-white bg-warning btn-sm float-end"
+                        onClick={() => handleDeleteTask('done', task.id)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const taskContent = event.target.task.value;
+                  handleAddTask('done', taskContent);
+                  event.target.task.value = '';
+                }}
+              >
+                <input type="text" name="task" placeholder="Add a new task" className='w-100 mt-2 p-1' />
+                <button type="submit" className="btn offset-4  btn_Addtask text-white mt-1">
+                  + Add another task
+                </button>
+              </form>
             </div>
+
           </div>
         </div>
       </div>
+
     </div>
   );
 }
